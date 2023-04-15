@@ -22,6 +22,7 @@ func (a *Agent) EnumerateSubdomainsWithCtx(ctx context.Context, domain string, p
 		defer close(results)
 
 		session, err := subscraping.NewSession(domain, proxy, rateLimit, timeout)
+		defer session.RateLimiter.Stop()
 		if err != nil {
 			results <- subscraping.Result{
 				Type: subscraping.Error, Error: fmt.Errorf("could not init passive session for %s: %s", domain, err),
